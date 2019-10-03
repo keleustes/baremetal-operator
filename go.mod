@@ -3,21 +3,16 @@ module github.com/metal3-io/baremetal-operator
 go 1.13
 
 require (
-	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-logr/logr v0.1.0
-	github.com/gobuffalo/envy v1.6.13 // indirect
-	github.com/golang/groupcache v0.0.0-20181024230925-c65c006176ff // indirect
+	github.com/gobuffalo/packr/v2 v2.0.0 // indirect
 	github.com/gophercloud/gophercloud v0.2.1-0.20190710011424-2d40ff7a3874
 	github.com/gophercloud/utils v0.0.0-20190313033024-0bcc8e728cb5
-	github.com/operator-framework/operator-sdk v0.4.1-0.20190122205939-16ba99089894
+	github.com/operator-framework/operator-sdk v0.10.0
 	github.com/pkg/errors v0.8.1
-	github.com/prometheus/client_model v0.0.0-20190115171406-56726106282f // indirect
-	github.com/prometheus/common v0.1.0 // indirect
-	github.com/prometheus/procfs v0.0.0-20190117184657-bf6a532e95b1 // indirect
 	k8s.io/api v0.0.0
 	k8s.io/apiextensions-apiserver v0.0.0 // indirect
 	k8s.io/apimachinery v0.0.0
-	k8s.io/client-go v0.0.0
+	k8s.io/client-go v11.0.0+incompatible
 	sigs.k8s.io/controller-runtime v0.2.2
 )
 
