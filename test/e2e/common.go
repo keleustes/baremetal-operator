@@ -145,7 +145,7 @@ func WaitForBmhInPowerState(ctx context.Context, input WaitForBmhInPowerStateInp
 	}, intervals...).Should(Succeed())
 }
 
-func buildKustomizeManifest(source string) ([]byte, error) {
+func BuildKustomizeManifest(source string) ([]byte, error) {
 	kustomizer := krusty.MakeKustomizer(krusty.MakeDefaultOptions())
 	fSys := filesys.MakeFsOnDisk()
 	resources, err := kustomizer.Run(fSys, source)
@@ -332,7 +332,7 @@ func BuildAndApplyKustomization(ctx context.Context, input *BuildAndApplyKustomi
 	var err error
 	kustomization := input.Kustomization
 	clusterProxy := input.ClusterProxy
-	manifest, err := buildKustomizeManifest(kustomization)
+	manifest, err := BuildKustomizeManifest(kustomization)
 	if err != nil {
 		return err
 	}
@@ -411,7 +411,7 @@ func KubectlDelete(ctx context.Context, kubeconfigPath string, resources []byte,
 // BuildAndRemoveKustomization builds the provided kustomization to resources and removes them from the cluster
 // provided by clusterProxy.
 func BuildAndRemoveKustomization(ctx context.Context, kustomization string, clusterProxy framework.ClusterProxy) error {
-	manifest, err := buildKustomizeManifest(kustomization)
+	manifest, err := BuildKustomizeManifest(kustomization)
 	if err != nil {
 		return err
 	}
@@ -437,4 +437,26 @@ func AnnotateBmh(ctx context.Context, client client.Client, host metal3api.BareM
 
 func Logf(format string, a ...interface{}) {
 	fmt.Fprintf(GinkgoWriter, "INFO: "+format+"\n", a...)
+}
+
+// FlakeAttempt retries the given function up to attempts times.
+func FlakeAttempt(attempts int, f func() error) error {
+	var err error
+	for i := 0; i < attempts; i++ {
+		err = f()
+		if err == nil {
+			return nil
+		}
+		Logf("Attempt %d failed: %v", i+1, err)
+	}
+	return err
+}
+
+// GetKubeconfigPath returns the path to the kubeconfig file.
+func GetKubeconfigPath() string {
+	kubeconfigPath := os.Getenv("KUBECONFIG")
+	if kubeconfigPath == "" {
+		kubeconfigPath = os.Getenv("HOME") + "/.kube/config"
+	}
+	return kubeconfigPath
 }
